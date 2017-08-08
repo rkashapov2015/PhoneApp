@@ -5,8 +5,10 @@ import java.util.logging.Logger;
 import com.eclipsesource.json.*;
 import components.Sender;
 import components.asterisk.*;
+import java.awt.Dialog;
 import java.util.ArrayList;
 import java.util.List;
+import org.ini4j.Ini;
 
 
 /*
@@ -41,24 +43,64 @@ public class MainFrame extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        mainPanel = new javax.swing.JPanel();
+        jDialog1 = new javax.swing.JDialog();
+        jPanel1 = new javax.swing.JPanel();
+        jbSave = new javax.swing.JButton();
         jtUrl = new javax.swing.JTextField();
-        jbSend = new javax.swing.JButton();
+        jlUrl = new javax.swing.JLabel();
+        mainPanel = new javax.swing.JPanel();
         jtPhone = new javax.swing.JTextField();
         jbSearch = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         jtArea = new javax.swing.JTextArea();
+        jbGear = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        jbSave.setText("Сохранить");
 
         jtUrl.setText("http://10.1.51.6:3000/monitor.php");
 
-        jbSend.setText("Send");
-        jbSend.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jbSendActionPerformed(evt);
-            }
-        });
+        jlUrl.setText("Ссылка");
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addComponent(jlUrl, javax.swing.GroupLayout.DEFAULT_SIZE, 64, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jtUrl, javax.swing.GroupLayout.PREFERRED_SIZE, 312, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(jbSave)))
+                .addContainerGap())
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jtUrl, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jlUrl))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 234, Short.MAX_VALUE)
+                .addComponent(jbSave)
+                .addContainerGap())
+        );
+
+        javax.swing.GroupLayout jDialog1Layout = new javax.swing.GroupLayout(jDialog1.getContentPane());
+        jDialog1.getContentPane().setLayout(jDialog1Layout);
+        jDialog1Layout.setHorizontalGroup(
+            jDialog1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+        jDialog1Layout.setVerticalGroup(
+            jDialog1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jbSearch.setText("Поиск");
         jbSearch.addActionListener(new java.awt.event.ActionListener() {
@@ -71,6 +113,13 @@ public class MainFrame extends javax.swing.JFrame {
         jtArea.setRows(5);
         jScrollPane1.setViewportView(jtArea);
 
+        jbGear.setText("\t⚙");
+        jbGear.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jbGearActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout mainPanelLayout = new javax.swing.GroupLayout(mainPanel);
         mainPanel.setLayout(mainPanelLayout);
         mainPanelLayout.setHorizontalGroup(
@@ -80,13 +129,11 @@ public class MainFrame extends javax.swing.JFrame {
                 .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane1)
                     .addGroup(mainPanelLayout.createSequentialGroup()
-                        .addComponent(jtPhone)
+                        .addComponent(jtPhone, javax.swing.GroupLayout.PREFERRED_SIZE, 276, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jbSearch))
-                    .addGroup(mainPanelLayout.createSequentialGroup()
-                        .addComponent(jtUrl, javax.swing.GroupLayout.DEFAULT_SIZE, 316, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jbSend)))
+                        .addComponent(jbSearch)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jbGear)))
                 .addContainerGap())
         );
         mainPanelLayout.setVerticalGroup(
@@ -95,14 +142,11 @@ public class MainFrame extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jtPhone, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jbSearch))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 213, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jtUrl, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jbSend))
-                .addContainerGap())
+                    .addComponent(jbSearch)
+                    .addComponent(jbGear))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 43, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(43, 43, 43))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -119,49 +163,12 @@ public class MainFrame extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jbSendActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbSendActionPerformed
-        if (jtUrl.getText() == "") {
-            return;
-        }
-        //Sender sender = new Sender(jtUrl.getText());
-        //try {
-        //String result = sender.getRequest();
-        String result = "{\"queue\":{\"4000\":{\"402\":[\"Unavailable\"],\"401\":[\"Unavailable\"],\"400\":[\"Unavailable\"]},\"2000\":{\"200\":[\"Not in use\"],\"202\":[\"Busy\",\"paused\"],\"201\":[\"Unavailable\"]},\"3000\":{\"302\":[\"Unavailable\"],\"301\":[\"Unavailable\"],\"300\":[\"Unavailable\"]}}}";
-        System.out.println(result);
-        JsonObject jsonObject = Json.parse(result).asObject();
-
-        JsonObject queueObject = jsonObject.get("queue").asObject();
-        //JsonArray queues = jsonObject.get("queue").asArray();
-
-        for (JsonObject.Member member : queueObject) {
-            String name = member.getName();
-            System.out.println(name);
-            JsonObject phones = member.getValue().asObject();
-            for (JsonObject.Member phoneMember : phones) {
-                String phoneNum = phoneMember.getName();
-                System.out.print(phoneNum + ": ");
-                JsonArray statuses = phoneMember.getValue().asArray();
-                for (JsonValue status : statuses) {
-                    System.out.print(status.asString() + "; ");
-                }
-                System.out.println("");
-            }
-
-        }
-
-        //} catch (IOException ex) {
-        //    Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
-        //}
-
-    }//GEN-LAST:event_jbSendActionPerformed
-
     private void jbSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbSearchActionPerformed
-        System.out.println(jtPhone.getText());
-        if(jtPhone.getText() == "" && jtPhone.getText() == null) return;
+//        System.out.println(jtPhone.getText());
+        if(jtPhone.getText().equals("") || jtPhone.getText().equals(null)) return;
         for (Queue queue : queues) {
             //System.out.println(queue.getPhoneNumbersString());
             Phone phoneObject = queue.getPhone(jtPhone.getText());
-            
             if (phoneObject.getName() != "" && phoneObject.getName() != null) {
                 System.out.println(phoneObject.getName());
                 String line = phoneObject.getName() + ":";
@@ -174,6 +181,13 @@ public class MainFrame extends javax.swing.JFrame {
             }
         }
     }//GEN-LAST:event_jbSearchActionPerformed
+
+    private void jbGearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbGearActionPerformed
+        jDialog1.setSize(300, 200);
+        jDialog1.setLocationRelativeTo(null);
+        jDialog1.setTitle("Настройки");
+        jDialog1.setVisible(true);
+    }//GEN-LAST:event_jbGearActionPerformed
 
     private void getDataAsterisk() {
         String result = "{\"queue\":{\"4000\":{\"402\":[\"Unavailable\"],\"401\":[\"Unavailable\"],\"400\":[\"Unavailable\"]},\"2000\":{\"200\":[\"Not in use\"],\"202\":[\"Busy\",\"paused\"],\"201\":[\"Unavailable\"]},\"3000\":{\"302\":[\"Unavailable\"],\"301\":[\"Unavailable\"],\"300\":[\"Unavailable\"]}}}";
@@ -212,7 +226,10 @@ public class MainFrame extends javax.swing.JFrame {
         //    Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
         //}
     }
-
+    private void initConfig() {
+        Ini ini = new Ini();
+        
+    }
     /**
      * @param args the command line arguments
      */
@@ -252,9 +269,13 @@ public class MainFrame extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JDialog jDialog1;
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JButton jbGear;
+    private javax.swing.JButton jbSave;
     private javax.swing.JButton jbSearch;
-    private javax.swing.JButton jbSend;
+    private javax.swing.JLabel jlUrl;
     private javax.swing.JTextArea jtArea;
     private javax.swing.JTextField jtPhone;
     private javax.swing.JTextField jtUrl;

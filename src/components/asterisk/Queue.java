@@ -41,7 +41,7 @@ public class Queue {
 
     public Phone getPhone(String phoneNumber) {
         for (Phone phone : this.phones) {
-            if (phone.getName() == phoneNumber) {
+            if (phone.getName().equals(phoneNumber)) {
                 return phone;
             }
         }
