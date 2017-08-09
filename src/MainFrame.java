@@ -234,7 +234,7 @@ public class MainFrame extends javax.swing.JFrame {
         rePaint();
     }//GEN-LAST:event_jbUpdateActionPerformed
 
-    private synchronized void getDataAsterisk() {
+    private synchronized boolean getDataAsterisk() {
         //String result = "{\"queue\":{\"4000\":{\"402\":[\"Unavailable\"],\"401\":[\"Unavailable\"],\"400\":[\"Unavailable\"]},\"2000\":{\"200\":[\"Not in use\"],\"202\":[\"Busy\",\"paused\"],\"201\":[\"Unavailable\"]},\"3000\":{\"302\":[\"Unavailable\"],\"301\":[\"Unavailable\"],\"300\":[\"Unavailable\"]}}}";
         //System.out.println(result);
         //JsonObject jsonObject = Json.parse(result).asObject();
@@ -243,8 +243,9 @@ public class MainFrame extends javax.swing.JFrame {
         try {
             String result = sender.getRequest();
             System.out.println(result);
+            System.out.println(this.oldResult.equals(result));
             if (this.oldResult.equals(result)) {
-                return;
+                return false;
             }
             this.oldResult = result;
             JsonObject jsonObject = Json.parse(result).asObject();
@@ -294,6 +295,7 @@ public class MainFrame extends javax.swing.JFrame {
         } catch (IOException ex) {
             Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
         }
+        return true;
     }
 
     private synchronized void renderPhones() {
@@ -355,8 +357,10 @@ public class MainFrame extends javax.swing.JFrame {
     }
 
     public void rePaint() {
-        getDataAsterisk();
-        renderPhones();
+        if (getDataAsterisk()) {
+            renderPhones();
+        }
+
     }
 
     private void initConfig() {
