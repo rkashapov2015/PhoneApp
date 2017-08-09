@@ -14,18 +14,28 @@ import java.util.List;
  */
 public class Phone {
 
+    public static int STATUS_UNKNOWN = 3;
+    public static int STATUS_READY = 2;
+    public static int STATUS_BUSY = 1;
+    public static int STATUS_DISABLED = 0;
     private String name;
     private List<String> statuses;
+    //3 = Unknown, 2 = Ready, 1
+    private int statusValue;
 
     public Phone(String newName) {
-        name = newName;
-        statuses = new ArrayList<>();
+        this.name = newName;
+        this.statuses = new ArrayList<>();
     }
 
     public boolean addStatus(String status) {
         if (!status.isEmpty()) {
             if (!statuses.contains(status)) {
-                return statuses.add(status);
+                if (statuses.add(status)) {
+                    changeStatus();
+                    return true;
+                }
+
             }
         }
         return false;
@@ -33,20 +43,48 @@ public class Phone {
 
     public boolean removeStatus(String status) {
         if (statuses.contains(status)) {
-            return statuses.remove(status);
+            statuses.remove(status);
+            changeStatus();
         }
         return false;
     }
 
     public void removeStatuses() {
-        statuses.clear();
+        this.statuses.clear();
+        this.statusValue = STATUS_UNKNOWN;
     }
 
     public String getName() {
         return this.name;
     }
-    
+
     public List<String> getStatuses() {
-        return statuses;
+        return this.statuses;
+    }
+
+    private void changeStatus() {
+        String[] readyStatus = {"Not in use"};
+        String[] busyStatus = {"In use", "paused", "Busy", "Ringing"};
+        String[] disableStatus = {"Unavailable"};
+        this.statusValue = STATUS_UNKNOWN;
+        for (String strStatus : statuses) {
+            this.statusValue = checkingByArrayStatus(strStatus, readyStatus, STATUS_READY, statusValue);
+            this.statusValue = checkingByArrayStatus(strStatus, busyStatus, STATUS_BUSY, statusValue);
+            this.statusValue = checkingByArrayStatus(strStatus, disableStatus, STATUS_DISABLED, statusValue);
+        }
+    }
+
+    private int checkingByArrayStatus(String strStatus, String[] strStatuses, int statusValue, int currentStatusValue) {
+        if (java.util.Arrays.asList(strStatuses).indexOf(strStatus) != -1) {
+            if (currentStatusValue > statusValue) {
+                currentStatusValue = statusValue;
+            }
+        }
+        return currentStatusValue;
+    }
+
+    public int getStatus() {
+        changeStatus();
+        return this.statusValue;
     }
 }

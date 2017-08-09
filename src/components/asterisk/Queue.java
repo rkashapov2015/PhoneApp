@@ -6,8 +6,8 @@
 package components.asterisk;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
+import javax.swing.JPanel;
 
 /**
  *
@@ -17,10 +17,12 @@ public class Queue {
 
     private String name;
     private List<Phone> phones;
+    private JPanel panel = null;
 
-    public Queue(String name) {
+    public Queue(String newName) {
+        this.name = newName;
         phones = new ArrayList<>();
-
+        
     }
 
     public boolean addPhone(Phone phone) {
@@ -48,20 +50,39 @@ public class Queue {
         return (new Phone(null));
     }
 
+    public boolean removePhone(Phone phone) {
+        return this.phones.remove(phone);
+    }
+
     public List<String> getPhoneNumbers() {
         List<String> listPhones = new ArrayList<>();
-        for(Phone phone : this.phones) {
+        for (Phone phone : this.phones) {
             listPhones.add(phone.getName());
         }
         return listPhones;
     }
+
     public String getPhoneNumbersString() {
         String result = "";
         List<String> phonesList = getPhoneNumbers();
-        for(String phoneS : phonesList) {
+        for (String phoneS : phonesList) {
             result += phoneS + "; ";
         }
         return result;
     }
 
+    public List<Phone> getPhones() {
+        return this.phones;
+    }
+
+    public String getName() {
+        return this.name;
+    }
+    public JPanel getPanel() {
+        return this.panel;
+    }
+    
+    public void setPanel(JPanel newPanel) {
+        this.panel = newPanel;
+    }
 }
