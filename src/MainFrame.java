@@ -10,15 +10,20 @@ import java.awt.Component;
 import java.awt.Dialog;
 import java.awt.Font;
 import java.awt.GridLayout;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import javax.imageio.ImageIO;
 
 import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.border.Border;
 
-import org.ini4j.Ini;
+import org.ini4j.*;
 
 
 /*
@@ -36,6 +41,7 @@ public class MainFrame extends javax.swing.JFrame {
     private String oldResult;
     public SubThread thread;
     private List<JPanel> queuesPanels;
+    private String urlAddress;
 
     /**
      * Creates new form MainFrame
@@ -49,7 +55,7 @@ public class MainFrame extends javax.swing.JFrame {
         renderPhones();*/
         //rePaint();
         thread = new SubThread(this);
-
+        initConfig();
     }
 
     /**
@@ -67,17 +73,19 @@ public class MainFrame extends javax.swing.JFrame {
         jlUrl = new javax.swing.JLabel();
         jbSave = new javax.swing.JButton();
         mainPanel = new javax.swing.JPanel();
-        jtPhone = new javax.swing.JTextField();
-        jbSearch = new javax.swing.JButton();
         jbGear = new javax.swing.JButton();
         jpPhones = new javax.swing.JPanel();
-        jbUpdate = new javax.swing.JButton();
 
         jtUrl.setText("http://10.1.51.6:3000/monitor.php");
 
         jlUrl.setText("Ссылка");
 
         jbSave.setText("Сохранить");
+        jbSave.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jbSaveActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -122,13 +130,6 @@ public class MainFrame extends javax.swing.JFrame {
 
         mainPanel.setMinimumSize(new java.awt.Dimension(760, 302));
 
-        jbSearch.setText("Поиск");
-        jbSearch.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jbSearchActionPerformed(evt);
-            }
-        });
-
         jbGear.setText("\t⚙");
         jbGear.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -142,19 +143,12 @@ public class MainFrame extends javax.swing.JFrame {
         jpPhones.setLayout(jpPhonesLayout);
         jpPhonesLayout.setHorizontalGroup(
             jpPhonesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+            .addGap(0, 748, Short.MAX_VALUE)
         );
         jpPhonesLayout.setVerticalGroup(
             jpPhonesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 253, Short.MAX_VALUE)
+            .addGap(0, 259, Short.MAX_VALUE)
         );
-
-        jbUpdate.setText("Обновить");
-        jbUpdate.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jbUpdateActionPerformed(evt);
-            }
-        });
 
         javax.swing.GroupLayout mainPanelLayout = new javax.swing.GroupLayout(mainPanel);
         mainPanel.setLayout(mainPanelLayout);
@@ -162,27 +156,16 @@ public class MainFrame extends javax.swing.JFrame {
             mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(mainPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jpPhones, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(mainPanelLayout.createSequentialGroup()
-                        .addComponent(jtPhone, javax.swing.GroupLayout.PREFERRED_SIZE, 205, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jbSearch)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jbUpdate)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 321, Short.MAX_VALUE)
-                        .addComponent(jbGear)))
+                .addComponent(jpPhones, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, mainPanelLayout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(jbGear))
         );
         mainPanelLayout.setVerticalGroup(
             mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, mainPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jtPhone, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jbSearch)
-                    .addComponent(jbGear)
-                    .addComponent(jbUpdate))
+                .addComponent(jbGear)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jpPhones, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
@@ -202,27 +185,6 @@ public class MainFrame extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jbSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbSearchActionPerformed
-//        System.out.println(jtPhone.getText());
-        if (jtPhone.getText().equals("") || jtPhone.getText().equals(null)) {
-            return;
-        }
-        for (Queue queue : queues) {
-            //System.out.println(queue.getPhoneNumbersString());
-            Phone phoneObject = queue.getPhone(jtPhone.getText());
-            if (phoneObject.getName() != "" && phoneObject.getName() != null) {
-                System.out.println(phoneObject.getName());
-                String line = phoneObject.getName() + ":";
-                List<String> statuses = phoneObject.getStatuses();
-                for (String status : statuses) {
-                    line += status + ";";
-                }
-                //jtArea.setText(line);
-
-            }
-        }
-    }//GEN-LAST:event_jbSearchActionPerformed
-
     private void jbGearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbGearActionPerformed
         jDialog1.setSize(390, 200);
         jDialog1.setLocationRelativeTo(null);
@@ -230,16 +192,16 @@ public class MainFrame extends javax.swing.JFrame {
         jDialog1.setVisible(true);
     }//GEN-LAST:event_jbGearActionPerformed
 
-    private void jbUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbUpdateActionPerformed
-        rePaint();
-    }//GEN-LAST:event_jbUpdateActionPerformed
+    private void jbSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbSaveActionPerformed
+        urlAddress = jtUrl.getText();
+    }//GEN-LAST:event_jbSaveActionPerformed
 
     private synchronized boolean getDataAsterisk() {
         //String result = "{\"queue\":{\"4000\":{\"402\":[\"Unavailable\"],\"401\":[\"Unavailable\"],\"400\":[\"Unavailable\"]},\"2000\":{\"200\":[\"Not in use\"],\"202\":[\"Busy\",\"paused\"],\"201\":[\"Unavailable\"]},\"3000\":{\"302\":[\"Unavailable\"],\"301\":[\"Unavailable\"],\"300\":[\"Unavailable\"]}}}";
         //System.out.println(result);
         //JsonObject jsonObject = Json.parse(result).asObject();
 
-        Sender sender = new Sender(jtUrl.getText());
+        Sender sender = new Sender(urlAddress);
         try {
             String result = sender.getRequest();
             System.out.println(result);
@@ -364,7 +326,29 @@ public class MainFrame extends javax.swing.JFrame {
     }
 
     private void initConfig() {
-        Ini ini = new Ini();
+        try {
+            File file = new File("config.ini");
+            if (!file.exists()) {
+                if(file.createNewFile()) {
+                    System.out.println("file created");
+                }
+            }
+            Wini ini = new Wini(file);
+            if (ini.isEmpty()) {
+                ini.put("main", "url", "http://10.1.51.6:3000/monitor.php");
+                ini.store();
+                urlAddress = "http://10.1.51.6:3000/monitor.php";
+            } else {
+                urlAddress = ini.get("main", "url", String.class);
+            }
+            
+            //ini.put("main",)
+            //Ini ini = new Ini(new File("config.ini"));
+            //java.util.prefs.Preferences prefs = new IniPreferences(ini);
+            //System.out.println("grumpy/homePage: " + prefs.node("grumpy").get("homePage", null));
+        } catch (IOException ex) {
+            Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
+        }
 
     }
 
@@ -398,9 +382,20 @@ public class MainFrame extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
+                String imagePath = "images/ICO.png";
+                InputStream imgStream = MainFrame.class.getResourceAsStream(imagePath);
+                BufferedImage myImg = null;
+                try {
+                    myImg = ImageIO.read(imgStream);
+                } catch (IOException ex) {
+                    Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                
                 MainFrame mainFrame = new MainFrame();
+                mainFrame.setResizable(false);
+                mainFrame.setIconImage(myImg);
                 mainFrame.setLocationRelativeTo(null);
-                mainFrame.setTitle("Тестовое окно");
+                mainFrame.setTitle("Индикатор состояния телефонов");
                 mainFrame.setVisible(true);
                 mainFrame.thread.start();
             }
@@ -412,11 +407,8 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JButton jbGear;
     private javax.swing.JButton jbSave;
-    private javax.swing.JButton jbSearch;
-    private javax.swing.JButton jbUpdate;
     private javax.swing.JLabel jlUrl;
     private javax.swing.JPanel jpPhones;
-    private javax.swing.JTextField jtPhone;
     private javax.swing.JTextField jtUrl;
     private javax.swing.JPanel mainPanel;
     // End of variables declaration//GEN-END:variables
