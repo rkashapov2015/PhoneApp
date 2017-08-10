@@ -329,7 +329,7 @@ public class MainFrame extends javax.swing.JFrame {
         try {
             File file = new File("config.ini");
             if (!file.exists()) {
-                if(file.createNewFile()) {
+                if (file.createNewFile()) {
                     System.out.println("file created");
                 }
             }
@@ -341,7 +341,7 @@ public class MainFrame extends javax.swing.JFrame {
             } else {
                 urlAddress = ini.get("main", "url", String.class);
             }
-            
+
             //ini.put("main",)
             //Ini ini = new Ini(new File("config.ini"));
             //java.util.prefs.Preferences prefs = new IniPreferences(ini);
@@ -382,18 +382,24 @@ public class MainFrame extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                String imagePath = "images/ICO.png";
-                InputStream imgStream = MainFrame.class.getResourceAsStream(imagePath);
-                BufferedImage myImg = null;
-                try {
-                    myImg = ImageIO.read(imgStream);
-                } catch (IOException ex) {
-                    Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
-                }
+                String[] imagePaths = {"images/ico128.png", "images/ico256.png", "images/dbeaver.png", "images/icon.xpm"};
+                ArrayList<BufferedImage> icons = new ArrayList<>();
                 
+                for (String imagePath : imagePaths) {
+                    InputStream imgStream = MainFrame.class.getResourceAsStream(imagePath);
+                    BufferedImage myImg = null;
+                    try {
+                        myImg = ImageIO.read(imgStream);
+                    } catch (IOException ex) {
+                        Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    icons.add(myImg);
+                }
+
                 MainFrame mainFrame = new MainFrame();
                 mainFrame.setResizable(false);
-                mainFrame.setIconImage(myImg);
+                //mainFrame.setIconImage(myImg);
+                mainFrame.setIconImages(icons);
                 mainFrame.setLocationRelativeTo(null);
                 mainFrame.setTitle("Индикатор состояния телефонов");
                 mainFrame.setVisible(true);
