@@ -382,7 +382,14 @@ public class MainFrame extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                String[] imagePaths = {"images/ico128.png", "images/ico256.png"};
+                String[] imagePaths = {
+                    "images/ico20.png",
+                    "images/ico40.png",
+                    "images/ico60.png",
+                    "images/ico80.png",
+                    "images/ico128.png", 
+                    "images/ico256.png"
+                };
                 ArrayList<BufferedImage> icons = new ArrayList<>();
                 
                 for (String imagePath : imagePaths) {
