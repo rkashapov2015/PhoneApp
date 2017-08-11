@@ -187,6 +187,7 @@ public class MainFrame extends javax.swing.JFrame {
 
     private void jbGearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbGearActionPerformed
         jDialog1.setSize(390, 200);
+        jDialog1.setResizable(false);
         jDialog1.setLocationRelativeTo(null);
         jDialog1.setTitle("Настройки");
         jDialog1.setVisible(true);
