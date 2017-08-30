@@ -7,6 +7,8 @@ package components;
  */
 import java.io.*;
 import java.net.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -33,8 +35,8 @@ public class Sender {
             HttpURLConnection httpConnection = (HttpURLConnection) new URL(url).openConnection();
             //connection.setRequestProperty("Accept-Charset", charset);
             httpConnection.setRequestMethod("GET");
-            httpConnection.setConnectTimeout(1000);
-            httpConnection.setReadTimeout(1000);
+            httpConnection.setConnectTimeout(3000);
+            httpConnection.setReadTimeout(5000);
             /*System.out.println(httpConnection.getResponseCode());
             System.out.println(httpConnection.getResponseMessage());
             System.out.println(httpConnection.getURL());*/
@@ -68,6 +70,9 @@ public class Sender {
         } catch (SocketTimeoutException e) {
             return "";
         } catch (IOException e) {
+            return "";
+        } catch (java.lang.NullPointerException e) {
+            Logger.getLogger(Sender.class.getName()).log(Level.SEVERE, null, e);
             return "";
         }
     }

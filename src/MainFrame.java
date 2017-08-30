@@ -205,7 +205,7 @@ public class MainFrame extends javax.swing.JFrame {
         Sender sender = new Sender(urlAddress);
         try {
             String result = sender.getRequest();
-            System.out.println(result);
+            //System.out.println(result);
             //System.out.println(this.oldResult.equals(result));
             if (this.oldResult.equals(result)) {
                 return false;
