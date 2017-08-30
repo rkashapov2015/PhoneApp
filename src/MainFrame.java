@@ -143,7 +143,7 @@ public class MainFrame extends javax.swing.JFrame {
         jpPhones.setLayout(jpPhonesLayout);
         jpPhonesLayout.setHorizontalGroup(
             jpPhonesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 748, Short.MAX_VALUE)
+            .addGap(0, 0, Short.MAX_VALUE)
         );
         jpPhonesLayout.setVerticalGroup(
             jpPhonesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -154,13 +154,13 @@ public class MainFrame extends javax.swing.JFrame {
         mainPanel.setLayout(mainPanelLayout);
         mainPanelLayout.setHorizontalGroup(
             mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(mainPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jpPhones, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, mainPanelLayout.createSequentialGroup()
                 .addGap(0, 0, Short.MAX_VALUE)
                 .addComponent(jbGear))
+            .addGroup(mainPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jpPhones, javax.swing.GroupLayout.PREFERRED_SIZE, 447, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         mainPanelLayout.setVerticalGroup(
             mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -175,7 +175,7 @@ public class MainFrame extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(mainPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(mainPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -206,7 +206,7 @@ public class MainFrame extends javax.swing.JFrame {
         try {
             String result = sender.getRequest();
             System.out.println(result);
-            System.out.println(this.oldResult.equals(result));
+            //System.out.println(this.oldResult.equals(result));
             if (this.oldResult.equals(result)) {
                 return false;
             }
@@ -272,7 +272,7 @@ public class MainFrame extends javax.swing.JFrame {
         jpPhones.setLayout(layout);
         jpPhones.removeAll();
         JPanel queuePanel = null;
-        Font font = new Font("Dialog", Font.BOLD, 20);
+        Font font = new Font("Dialog", Font.PLAIN, 12);
 
         for (Queue queue : queues) {
             boolean existPanel = false;
@@ -283,9 +283,10 @@ public class MainFrame extends javax.swing.JFrame {
             } else {
                 GridLayout newLayout = new GridLayout(0, 4);
                 queuePanel = new JPanel(newLayout);
-                Border blackline = BorderFactory.createLineBorder(Color.black);
+                Border blackline = BorderFactory.createLineBorder(Color.gray);
                 //System.out.println("queue:" + queue.getName());
                 Border border = BorderFactory.createTitledBorder(blackline, queue.getName());
+                //Border border = BorderFactory.createLineBorder(Color.gray);
                 queuePanel.setBorder(border);
             }
 
@@ -331,7 +332,7 @@ public class MainFrame extends javax.swing.JFrame {
             File file = new File("config.ini");
             if (!file.exists()) {
                 if (file.createNewFile()) {
-                    System.out.println("file created");
+                    //System.out.println("file created");
                 }
             }
             Wini ini = new Wini(file);
