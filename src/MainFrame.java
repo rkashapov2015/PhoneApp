@@ -5,10 +5,8 @@ import java.util.logging.Logger;
 import com.eclipsesource.json.*;
 import components.Sender;
 import components.asterisk.*;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dialog;
-import java.awt.Font;
+import java.awt.*;
+import java.awt.GraphicsEnvironment;
 import java.awt.GridLayout;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -154,12 +152,11 @@ public class MainFrame extends javax.swing.JFrame {
         mainPanel.setLayout(mainPanelLayout);
         mainPanelLayout.setHorizontalGroup(
             mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, mainPanelLayout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(jbGear))
             .addGroup(mainPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jpPhones, javax.swing.GroupLayout.PREFERRED_SIZE, 447, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jbGear)
+                    .addComponent(jpPhones, javax.swing.GroupLayout.PREFERRED_SIZE, 447, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         mainPanelLayout.setVerticalGroup(
@@ -389,11 +386,11 @@ public class MainFrame extends javax.swing.JFrame {
                     "images/ico40.png",
                     "images/ico60.png",
                     "images/ico80.png",
-                    "images/ico128.png", 
+                    "images/ico128.png",
                     "images/ico256.png"
                 };
                 ArrayList<BufferedImage> icons = new ArrayList<>();
-                
+
                 for (String imagePath : imagePaths) {
                     InputStream imgStream = MainFrame.class.getResourceAsStream(imagePath);
                     BufferedImage myImg = null;
@@ -409,7 +406,14 @@ public class MainFrame extends javax.swing.JFrame {
                 mainFrame.setResizable(false);
                 //mainFrame.setIconImage(myImg);
                 mainFrame.setIconImages(icons);
-                mainFrame.setLocationRelativeTo(null);
+                //mainFrame.setLocationRelativeTo(null);
+                GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+                GraphicsDevice defaultScreen = ge.getDefaultScreenDevice();
+                Rectangle rect = defaultScreen.getDefaultConfiguration().getBounds();
+                int x = (int) rect.getMaxX() - mainFrame.getWidth();
+                //int y = (int) rect.getMaxY() - mainFrame.getHeight();
+                int y = 0;
+                mainFrame.setLocation(x, y);
                 mainFrame.setTitle("Индикатор состояния телефонов");
                 mainFrame.setVisible(true);
                 mainFrame.thread.start();
