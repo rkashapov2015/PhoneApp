@@ -222,13 +222,13 @@ public class MainFrame extends javax.swing.JFrame {
             //System.out.println(result);
             //System.out.println(this.oldResult.equals(result));
             if (result.equals("error")) {
-                System.out.println("Меняем индикатор");
+                //System.out.println("Меняем индикатор");
                 checkIndicator(true);
                 return false;
             }
             if (!result.equals(this.oldResult)) {
                 this.oldResult = result;
-                System.out.println(result);
+                //System.out.println(result);
                 JsonObject jsonObject = Json.parse(result).asObject();
                 JsonObject queueObject = jsonObject.get("queue").asObject();
                 //JsonArray queues = jsonObject.get("queue").asArray();
@@ -387,7 +387,7 @@ public class MainFrame extends javax.swing.JFrame {
     public void checkIndicator(boolean isError) {
         Color color = jpIndicator.getBackground();
         if (isError) {
-            System.out.println("серый");
+            //System.out.println("серый");
             color = Color.gray;
         } else {
             if (color == Color.red) {

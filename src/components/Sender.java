@@ -76,7 +76,7 @@ public class Sender {
             return "error";
         } catch (java.lang.NullPointerException e) {
             //Logger.getLogger(Sender.class.getName()).log(Level.SEVERE, null, e);
-            System.out.println("Ошибка при получении");
+            //System.out.println("Ошибка при получении");
             return "error";
         }
     }
