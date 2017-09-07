@@ -219,77 +219,77 @@ public class MainFrame extends javax.swing.JFrame {
         Sender sender = new Sender(urlAddress);
         try {
             String result = sender.getRequest();
-            System.out.println(result);
+            //System.out.println(result);
             //System.out.println(this.oldResult.equals(result));
-            if (result == "error") {
+            if (result.equals("error")) {
                 System.out.println("Меняем индикатор");
                 checkIndicator(true);
                 return false;
             }
-            if (this.oldResult.equals(result)) {
+            if (!result.equals(this.oldResult)) {
+                this.oldResult = result;
+                System.out.println(result);
+                JsonObject jsonObject = Json.parse(result).asObject();
+                JsonObject queueObject = jsonObject.get("queue").asObject();
+                //JsonArray queues = jsonObject.get("queue").asArray();
+
+                for (JsonObject.Member member : queueObject) {
+
+                    String name = member.getName();
+                    Queue queue = null;
+                    for (Queue queueEl : this.queues) {
+                        
+                        if (queueEl.getName().equals(name)) {
+                            
+                            if (this.queues.remove(queueEl)) {
+                            }
+                            break;
+                        }
+                    }
+
+                    queue = new Queue(name);
+
+                    JsonObject phones = member.getValue().asObject();
+                    for (JsonObject.Member phoneMember : phones) {
+
+                        String phoneNum = phoneMember.getName();
+                        Phone phone = queue.getPhone(phoneNum);
+                        if (phone.getName() != null) {
+                            queue.removePhone(phone);
+                        }
+                        phone = new Phone(phoneNum);
+                        //System.out.print(phoneNum + ": ");
+                        JsonArray statuses = phoneMember.getValue().asArray();
+                        for (JsonValue status : statuses) {
+                            phone.addStatus(status.asString());
+                            //System.out.print(status.asString() + "; ");
+                        }
+                        //System.out.println("");
+                        queue.addPhone(phone);
+                    }
+                    this.queues.add(queue);
+                }
+            } else {
+                checkIndicator(false);
                 return false;
             }
-            this.oldResult = result;
-            System.out.println(result);
-            JsonObject jsonObject = Json.parse(result).asObject();
-            JsonObject queueObject = jsonObject.get("queue").asObject();
-            //JsonArray queues = jsonObject.get("queue").asArray();
-
-            for (JsonObject.Member member : queueObject) {
-
-                String name = member.getName();
-                Queue queue = null;
-                for (Queue queueEl : this.queues) {
-                    //System.out.println("queue name: " + queueEl.getName());
-                    if (queueEl.getName().equals(name)) {
-                        //queueExist = true;
-                        //queue = queueEl;
-                        //System.out.println("queue " + name + " exist");
-                        if (this.queues.remove(queueEl)) {
-                            //System.out.println("...deleted");
-                        }
-                        break;
-                    }
-                }
-
-                queue = new Queue(name);
-
-                //System.out.println(name);
-                JsonObject phones = member.getValue().asObject();
-                for (JsonObject.Member phoneMember : phones) {
-
-                    String phoneNum = phoneMember.getName();
-                    Phone phone = queue.getPhone(phoneNum);
-                    if (phone.getName() != null) {
-                        queue.removePhone(phone);
-                    }
-                    phone = new Phone(phoneNum);
-                    //System.out.print(phoneNum + ": ");
-                    JsonArray statuses = phoneMember.getValue().asArray();
-                    for (JsonValue status : statuses) {
-                        phone.addStatus(status.asString());
-                        //System.out.print(status.asString() + "; ");
-                    }
-                    //System.out.println("");
-                    queue.addPhone(phone);
-                }
-                this.queues.add(queue);
-            }
+            
+            
         } catch (java.lang.NullPointerException e) {
             Logger.getLogger(Sender.class.getName()).log(Level.SEVERE, null, e);
             checkIndicator(true);
             return false;
-        } catch(UnsupportedOperationException e) {
+        } catch (UnsupportedOperationException e) {
             Logger.getLogger(Sender.class.getName()).log(Level.SEVERE, null, e);
             checkIndicator(true);
             return false;
-        } catch(com.eclipsesource.json.ParseException e) {
+        } catch (com.eclipsesource.json.ParseException e) {
             Logger.getLogger(Sender.class.getName()).log(Level.SEVERE, null, e);
             checkIndicator(true);
             return false;
         }
-        
         return true;
+        
     }
 
     private synchronized void renderPhones() {
@@ -305,7 +305,7 @@ public class MainFrame extends javax.swing.JFrame {
         JPanel queuePanel = null;
         Font font = new Font("Dialog", Font.PLAIN, 12);
 
-        for (Queue queue : queues) {
+        for (Queue queue : this.queues) {
             boolean existPanel = false;
             if ((queuePanel = queue.getPanel()) != null) {
                 //System.out.println("panel exist");
@@ -352,10 +352,9 @@ public class MainFrame extends javax.swing.JFrame {
     }
 
     public void rePaint() {
-        if (getDataAsterisk()) {
+        if (getDataAsterisk()) {    
             renderPhones();
         }
-
     }
 
     private void initConfig() {
