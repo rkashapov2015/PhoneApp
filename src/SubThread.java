@@ -27,6 +27,7 @@ public class SubThread extends Thread {
                 //System.out.println("thread");
                 mainFrame.rePaint();
                 Thread.sleep(3000);
+                
             } catch (InterruptedException ex) {
                 Logger.getLogger(SubThread.class.getName()).log(Level.SEVERE, null, ex);
             }

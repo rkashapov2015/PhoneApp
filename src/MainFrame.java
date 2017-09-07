@@ -73,6 +73,7 @@ public class MainFrame extends javax.swing.JFrame {
         mainPanel = new javax.swing.JPanel();
         jbGear = new javax.swing.JButton();
         jpPhones = new javax.swing.JPanel();
+        jpIndicator = new javax.swing.JPanel();
 
         jtUrl.setText("http://10.1.51.6:3000/monitor.php");
 
@@ -148,21 +149,38 @@ public class MainFrame extends javax.swing.JFrame {
             .addGap(0, 259, Short.MAX_VALUE)
         );
 
+        jpIndicator.setPreferredSize(new java.awt.Dimension(2, 0));
+
+        javax.swing.GroupLayout jpIndicatorLayout = new javax.swing.GroupLayout(jpIndicator);
+        jpIndicator.setLayout(jpIndicatorLayout);
+        jpIndicatorLayout.setHorizontalGroup(
+            jpIndicatorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 2, Short.MAX_VALUE)
+        );
+        jpIndicatorLayout.setVerticalGroup(
+            jpIndicatorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+
         javax.swing.GroupLayout mainPanelLayout = new javax.swing.GroupLayout(mainPanel);
         mainPanel.setLayout(mainPanelLayout);
         mainPanelLayout.setHorizontalGroup(
             mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(mainPanelLayout.createSequentialGroup()
+                .addComponent(jpIndicator, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jbGear))
+            .addGroup(mainPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jbGear)
-                    .addComponent(jpPhones, javax.swing.GroupLayout.PREFERRED_SIZE, 447, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jpPhones, javax.swing.GroupLayout.PREFERRED_SIZE, 447, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         mainPanelLayout.setVerticalGroup(
             mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, mainPanelLayout.createSequentialGroup()
-                .addComponent(jbGear)
+            .addGroup(mainPanelLayout.createSequentialGroup()
+                .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jbGear, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jpIndicator, javax.swing.GroupLayout.DEFAULT_SIZE, 31, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jpPhones, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
@@ -196,18 +214,23 @@ public class MainFrame extends javax.swing.JFrame {
 
     private synchronized boolean getDataAsterisk() {
         //String result = "{\"queue\":{\"4000\":{\"402\":[\"Unavailable\"],\"401\":[\"Unavailable\"],\"400\":[\"Unavailable\"]},\"2000\":{\"200\":[\"Not in use\"],\"202\":[\"Busy\",\"paused\"],\"201\":[\"Unavailable\"]},\"3000\":{\"302\":[\"Unavailable\"],\"301\":[\"Unavailable\"],\"300\":[\"Unavailable\"]}}}";
-        //System.out.println(result);
-        //JsonObject jsonObject = Json.parse(result).asObject();
 
+        //JsonObject jsonObject = Json.parse(result).asObject();
         Sender sender = new Sender(urlAddress);
         try {
             String result = sender.getRequest();
-            //System.out.println(result);
+            System.out.println(result);
             //System.out.println(this.oldResult.equals(result));
+            if (result == "error") {
+                System.out.println("Меняем индикатор");
+                checkIndicator(true);
+                return false;
+            }
             if (this.oldResult.equals(result)) {
                 return false;
             }
             this.oldResult = result;
+            System.out.println(result);
             JsonObject jsonObject = Json.parse(result).asObject();
             JsonObject queueObject = jsonObject.get("queue").asObject();
             //JsonArray queues = jsonObject.get("queue").asArray();
@@ -252,9 +275,20 @@ public class MainFrame extends javax.swing.JFrame {
                 }
                 this.queues.add(queue);
             }
-        } catch (IOException ex) {
-            Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (java.lang.NullPointerException e) {
+            Logger.getLogger(Sender.class.getName()).log(Level.SEVERE, null, e);
+            checkIndicator(true);
+            return false;
+        } catch(UnsupportedOperationException e) {
+            Logger.getLogger(Sender.class.getName()).log(Level.SEVERE, null, e);
+            checkIndicator(true);
+            return false;
+        } catch(com.eclipsesource.json.ParseException e) {
+            Logger.getLogger(Sender.class.getName()).log(Level.SEVERE, null, e);
+            checkIndicator(true);
+            return false;
         }
+        
         return true;
     }
 
@@ -264,7 +298,7 @@ public class MainFrame extends javax.swing.JFrame {
             this.queuesPanels = new ArrayList<>();
         }*/
         GridLayout layout = new GridLayout(this.queues.size(), 1);
-        //System.out.println("count queues: "+queues.size());
+        //System.out.println("count queues: " + queues.size());
         //mainPanel.get
         jpPhones.setLayout(layout);
         jpPhones.removeAll();
@@ -351,6 +385,25 @@ public class MainFrame extends javax.swing.JFrame {
 
     }
 
+    public void checkIndicator(boolean isError) {
+        Color color = jpIndicator.getBackground();
+        if (isError) {
+            System.out.println("серый");
+            color = Color.gray;
+        } else {
+            if (color == Color.red) {
+                color = Color.green;
+            } else {
+                color = Color.red;
+            }
+        }
+
+        jpIndicator.setBackground(color);
+        jpIndicator.revalidate();
+        jpIndicator.invalidate();
+        jpIndicator.repaint();
+    }
+
     /**
      * @param args the command line arguments
      */
@@ -427,6 +480,7 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JButton jbGear;
     private javax.swing.JButton jbSave;
     private javax.swing.JLabel jlUrl;
+    private javax.swing.JPanel jpIndicator;
     private javax.swing.JPanel jpPhones;
     private javax.swing.JTextField jtUrl;
     private javax.swing.JPanel mainPanel;

@@ -28,7 +28,7 @@ public class Sender {
         this.param2 = "dfdfdfdf";
     }
 
-    public String getRequest() throws IOException {
+    public String getRequest() {
         try {
             //String query = String.format("param1=%s&param2=%s", URLEncoder.encode(param1, charset), URLEncoder.encode(param2, charset));
             //URLConnection connection = new URL(this.url + "?" + query).openConnection();
@@ -47,6 +47,9 @@ public class Sender {
             /*httpConnection.getHeaderFields().entrySet().forEach((header) -> {
             System.out.println(header.getKey() + "=" + header.getValue());
             });*/
+            if(contentType == "") {
+                return "false";
+            }
             for (String param : contentType.replace(" ", "").split(";")) {
                 if (param.startsWith("charset=")) {
                     charset = param.split("=", 2)[1];
@@ -68,12 +71,13 @@ public class Sender {
 
             return data;
         } catch (SocketTimeoutException e) {
-            return "";
+            return "error";
         } catch (IOException e) {
-            return "";
+            return "error";
         } catch (java.lang.NullPointerException e) {
-            Logger.getLogger(Sender.class.getName()).log(Level.SEVERE, null, e);
-            return "";
+            //Logger.getLogger(Sender.class.getName()).log(Level.SEVERE, null, e);
+            System.out.println("Ошибка при получении");
+            return "error";
         }
     }
 }
