@@ -21,15 +21,14 @@ public class SubThread extends Thread {
 
     @Override
     public void run() {
-        while (true) {
+        while (isInterrupted() == false) {
             try {
-                
                 //System.out.println("thread");
                 mainFrame.rePaint();
                 Thread.sleep(3000);
-                
             } catch (InterruptedException ex) {
                 Logger.getLogger(SubThread.class.getName()).log(Level.SEVERE, null, ex);
+                return;
             }
         }
 

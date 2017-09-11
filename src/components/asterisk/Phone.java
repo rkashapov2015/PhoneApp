@@ -14,9 +14,11 @@ import java.util.List;
  */
 public class Phone {
 
-    public static int STATUS_UNKNOWN = 3;
-    public static int STATUS_READY = 2;
-    public static int STATUS_BUSY = 1;
+    
+    public static int STATUS_UNKNOWN = 4;
+    public static int STATUS_READY = 3;
+    public static int STATUS_BUSY = 2;
+    public static int STATUS_PAUSED = 1;
     public static int STATUS_DISABLED = 0;
     private String name;
     private List<String> statuses;
@@ -64,13 +66,15 @@ public class Phone {
 
     private void changeStatus() {
         String[] readyStatus = {"Not in use"};
-        String[] busyStatus = {"In use", "paused", "Busy", "Ringing"};
-        String[] disableStatus = {"Unavailable"};
+        String[] busyStatus = {"In use", "Busy", "Ringing"};
+        String[] pausedStatus = {"paused"};
+        String[] disableStatus = {"Unavailable", "Invalid"};
         this.statusValue = STATUS_UNKNOWN;
         for (String strStatus : statuses) {
             this.statusValue = checkingByArrayStatus(strStatus, readyStatus, STATUS_READY, statusValue);
             this.statusValue = checkingByArrayStatus(strStatus, busyStatus, STATUS_BUSY, statusValue);
             this.statusValue = checkingByArrayStatus(strStatus, disableStatus, STATUS_DISABLED, statusValue);
+            this.statusValue = checkingByArrayStatus(strStatus, pausedStatus, STATUS_PAUSED, statusValue);
         }
     }
 

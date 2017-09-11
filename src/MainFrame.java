@@ -221,6 +221,7 @@ public class MainFrame extends javax.swing.JFrame {
             String result = sender.getRequest();
             //System.out.println(result);
             //System.out.println(this.oldResult.equals(result));
+            sender = null;
             if (result.equals("error")) {
                 //System.out.println("Меняем индикатор");
                 checkIndicator(true);
@@ -264,11 +265,14 @@ public class MainFrame extends javax.swing.JFrame {
                             phone.addStatus(status.asString());
                             //System.out.print(status.asString() + "; ");
                         }
+                        statuses = null;
                         //System.out.println("");
                         queue.addPhone(phone);
                     }
                     this.queues.add(queue);
                 }
+                jsonObject = null;
+                queueObject = null;
             } else {
                 checkIndicator(false);
                 return false;
@@ -330,8 +334,12 @@ public class MainFrame extends javax.swing.JFrame {
                 if (objPhone.getStatus() == Phone.STATUS_READY) {
                     color = new Color(0, 204, 51);
                 }
+                
                 if (objPhone.getStatus() == Phone.STATUS_BUSY) {
                     color = new Color(204, 0, 51);
+                }
+                if (objPhone.getStatus() == Phone.STATUS_PAUSED) {
+                    color = Color.orange;
                 }
                 button.setBackground(color);
                 button.setFont(font);
@@ -471,6 +479,13 @@ public class MainFrame extends javax.swing.JFrame {
                 mainFrame.thread.start();
             }
         });
+    }
+    
+    public void destroy() {
+        if(thread != null) {
+            thread.interrupt();
+            thread = null;
+        }
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
