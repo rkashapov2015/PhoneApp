@@ -206,6 +206,10 @@ public class MainFrame extends javax.swing.JFrame {
         jDialog1.setLocationRelativeTo(null);
         jDialog1.setTitle("Настройки");
         jDialog1.setVisible(true);
+		if (!urlAddress.isEmpty()) {
+			jtUrl.setText(urlAddress);
+		}
+		
     }//GEN-LAST:event_jbGearActionPerformed
 
     private void jbSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbSaveActionPerformed
